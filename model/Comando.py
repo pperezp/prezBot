@@ -1,6 +1,6 @@
 class Comando:
     # Constructor
-    def __init__(self, nombre, descripcion, mensaje, accion=""):
+    def __init__(self, nombre, descripcion, mensaje, accion=None):
         self.nombre = nombre
         self.mensaje = mensaje
         self.descripcion = descripcion

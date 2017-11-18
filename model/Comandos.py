@@ -1,11 +1,46 @@
 from model.Comando import Comando
+from model.Acciones import Acciones
+import time
 
 class Comandos:
     @staticmethod
     def init():
-        Comandos.add(Comando("cmd1", "def1", "men1"))
-        Comandos.add(Comando("cmd2", "def2", "men2"))
-        Comandos.add(Comando("cmd3", "def3", "men3"))
+
+        Comandos.add(
+            Comando(
+                "hora",
+                "Dice la hora del servidor",
+                time.strftime("%H:%M:%S")
+            )
+        )
+
+        Comandos.add(
+            Comando(
+                "gracias",
+                "Da las gracias!",
+                "De nada!"
+            )
+        )
+        """
+        Comandos.add(
+            Comando(
+                "foto",
+                "Saca una foto",
+                "",
+                Acciones.sacarFoto
+            )
+        )
+        
+        Comandos.add(
+            Comando(
+                "capturar",
+                "Captura la pantalla del server",
+                "",
+                Acciones.pantallazo
+            )
+        )
+        """
+
 
     @staticmethod
     def add(comando):
@@ -27,6 +62,7 @@ class Comandos:
     @staticmethod
     def print():
         str = "Lista de comandos disponibles\n\n"
+        str += "/start - Muestra esta lista de comandos\n"
         for c in Comandos.lista:
             print(c)
             str += c.nombre + " - "+ c.descripcion + "\n"

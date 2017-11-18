@@ -92,7 +92,7 @@ def start(bot, update, pass_chat_data=True):
     bot.sendMessage(chat_id=id, text="Gracias por hablarme!")
 
 
-start_handler = CommandHandler("hola", start)
+start_handler = CommandHandler("start", start)
 listener_handler = MessageHandler(Filters.text, listener)
 
 dispatcher.add_handler(start_handler)

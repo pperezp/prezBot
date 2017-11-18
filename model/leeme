@@ -1,0 +1,11 @@
+---------------------------------------------
+            CREACIÓN DE COMANDOS
+---------------------------------------------
+Para crear un comando nuevo, seguir los siguientes pasos.
+
+1.- Si el comando esta asociada a una acción, crear el método
+estático de esa accion en Acciones.py
+
+2.- Dirigirse a método init() de clase Comandos y crear el comando.
+si el comando no tiene una acción asociada, sólo no entregues como parámetro
+la accion. Si tiene una acción asociada, entrégale Accion.nombreMétodo.
