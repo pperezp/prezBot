@@ -13,10 +13,9 @@ from telegram.ext import *
 from cv2 import *
 import time
 
-rutaFotos = "/home/pi/prezBot/prezBot/"
 nombreFoto = "captura.jpg"
 
-bot         = telegram.Bot(token="")
+bot         = telegram.Bot(token="480148406:AAEfcvXjrEbGuQpgBSy3j0w7j9_LJo2iiAE")
 bot_updater = Updater(bot.token)
 dispatcher  = bot_updater.dispatcher
 
@@ -28,32 +27,38 @@ def enviarMensaje(bot, id, mensaje):
     )
 
 def enviarFoto(bot, id):
-    #bot.send_photo(chat_id=id, photo='https://telegram.org/img/t_logo.png')
+    try:
+        # bot.send_photo(chat_id=id, photo='https://telegram.org/img/t_logo.png')
 
-    # initialize the camera
-    cam = VideoCapture(0)  # 0 -> index of camera
-    s, img = cam.read()
-    if s:  # frame captured without any errors
+        # initialize the camera
+        cam = VideoCapture(0)  # 0 -> index of camera
+        s, img = cam.read()
+        if s:  # frame captured without any errors
+            imwrite(nombreFoto, img)  # save image
 
-        imwrite(nombreFoto, img)  # save image
-
-        bot.send_chat_action(chat_id=id, action=telegram.ChatAction.UPLOAD_PHOTO)
-        bot.send_photo(chat_id=id, photo=open(rutaFotos+nombreFoto, 'rb'))
+            bot.send_chat_action(chat_id=id, action=telegram.ChatAction.UPLOAD_PHOTO)
+            bot.send_photo(chat_id=id, photo=open(nombreFoto, 'rb'))
+    except BaseException as e:
+        enviarMensaje(bot, id, "Error! lo siento "+str(e))
 
 def enviarCaptura(bot, id):
-    import wx
-    app = wx.App()
+    try:
+        import wx
+        app = wx.App()
 
-    screen = wx.ScreenDC()
-    size = screen.GetSize()
-    bmp = wx.Bitmap(size[0], size[1])
-    mem = wx.MemoryDC(bmp)
-    mem.Blit(0, 0, size[0], size[1], screen, 0, 0)
-    del mem
-    bmp.SaveFile("pantalla.png", wx.BITMAP_TYPE_PNG)
+        screen = wx.ScreenDC()
+        size = screen.GetSize()
+        bmp = wx.Bitmap (size[0], size[1])
+        mem = wx.MemoryDC(bmp)
+        mem.Blit(0, 0, size[0], size[1], screen, 0, 0)
+        del mem
+        bmp.SaveFile("pantalla.png", wx.BITMAP_TYPE_PNG)
 
-    bot.send_chat_action(chat_id=id, action=telegram.ChatAction.UPLOAD_PHOTO)
-    bot.send_photo(chat_id=id, photo=open("pantalla.png", 'rb'))
+        bot.send_chat_action(chat_id=id, action=telegram.ChatAction.UPLOAD_PHOTO)
+        bot.send_photo(chat_id=id, photo=open("pantalla.png", 'rb'))
+    except BaseException as e:
+        enviarMensaje(bot, id, "Error! lo siento "+str(e))
+        bot.send_photo(chat_id=id, photo='https://telegram.org/img/t_logo.png')
 
 
 def listener(bot, update):
@@ -73,7 +78,7 @@ def listener(bot, update):
 
     if "captura" in mensaje.lower():
         enviarCaptura(bot, id)
-    
+
     if "temp" in mensaje.lower():
         bashCommand = "/opt/vc/bin/vcgencmd measure_temp"
         import subprocess
@@ -94,7 +99,10 @@ dispatcher.add_handler(start_handler)
 dispatcher.add_handler(listener_handler)
 
 bot_updater.start_polling()
+print("Bot iniciado!")
 bot_updater.idle()
 
+"""
 while True:
     pass
+"""
