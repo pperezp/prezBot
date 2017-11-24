@@ -94,3 +94,12 @@ class Bot:
         except BaseException as e:
             Bot.enviarMensaje("Error! lo siento " + str(e))
             # self.bot.send_photo(chat_id=self.id, photo='https://telegram.org/img/t_logo.png')
+
+    @staticmethod
+    def enviarMp3(url):
+        from model.Youtube import Youtube
+
+        archivo = Youtube.getMp3(url)+".mp3"
+
+        Bot.bot.send_chat_action(chat_id=Bot.id, action=telegram.ChatAction.UPLOAD_AUDIO)
+        Bot.bot.send_audio(chat_id=Bot.id, audio=open(archivo, 'rb'))

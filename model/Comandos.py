@@ -21,6 +21,16 @@ class Comandos:
                 "De nada!"
             )
         )
+
+        Comandos.add(
+            Comando(
+                "youtube",
+                "test youtube",
+                "",
+                Acciones.yt
+            )
+        )
+
         """
         Comandos.add(
             Comando(
@@ -54,7 +64,7 @@ class Comandos:
     @staticmethod
     def get(nombreComando):
         for c in Comandos.lista:
-            if(c.nombre == nombreComando.lower()):
+            if(c.nombre.contains(nombreComando.lower())):
                 return c
 
         return None
