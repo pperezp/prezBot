@@ -4,6 +4,7 @@ import wx
 from telegram.ext import *
 from model.Comandos import Comandos
 from cv2 import *
+from os import remove
 
 class Bot:
     @staticmethod
@@ -37,14 +38,15 @@ class Bot:
 
             c = Comandos.get(mensaje)
 
-            if c is None:
+            if "youtube" in mensaje or "youtu.be" in mensaje:
+                Bot.enviarMp3(mensaje)
+            elif c is None:
                 Bot.enviarMensaje("Comando no encontrado")
                 Bot.enviarMensaje(Comandos.print())
             elif c.accion is None:
                 Bot.enviarMensaje(c.mensaje)
             else:
                 c.accion()
-
         except BaseException as b:
             print(str(b))
 
@@ -96,10 +98,16 @@ class Bot:
             # self.bot.send_photo(chat_id=self.id, photo='https://telegram.org/img/t_logo.png')
 
     @staticmethod
-    def enviarMp3(url):
+    def enviarMp3(url, persistencia=True):
         from model.Youtube import Youtube
 
+        Bot.enviarMensaje("Se esta descargando el video. Sea paciente por favor...")
         archivo = Youtube.getMp3(url)+".mp3"
+
+        Bot.enviarMensaje("Video descargado! se esta enviando el mp3...")
 
         Bot.bot.send_chat_action(chat_id=Bot.id, action=telegram.ChatAction.UPLOAD_AUDIO)
         Bot.bot.send_audio(chat_id=Bot.id, audio=open(archivo, 'rb'))
+
+        if not persistencia:
+            remove(archivo)

@@ -64,7 +64,7 @@ class Comandos:
     @staticmethod
     def get(nombreComando):
         for c in Comandos.lista:
-            if(c.nombre.contains(nombreComando.lower())):
+            if(c.nombre in nombreComando.lower()):
                 return c
 
         return None

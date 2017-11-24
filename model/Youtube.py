@@ -5,8 +5,6 @@ import youtube_dl
 class Youtube:
     @staticmethod
     def getMp3(url):
-        url = "https://www.youtube.com/watch?v=nvxwiRuFgB0"
-
         ydl_opts = {
             'format': 'bestaudio/best',
             'outtmpl': 'ca.mp3',
@@ -23,7 +21,8 @@ class Youtube:
             video_id = info_dict.get("id", None)
             video_title = info_dict.get('title', None)
 
-        print(video_title)
+        video_title = video_title.replace("\'","")
+        video_title = video_title.replace("\"","")
 
         ydl_opts2 = {
             'format': 'bestaudio/best',
