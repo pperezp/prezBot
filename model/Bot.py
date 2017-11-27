@@ -9,14 +9,18 @@ from os import remove
 class Bot:
     @staticmethod
     def init():
+        Bot.save = False
         Comandos.init()
         Bot.bot = telegram.Bot(token="480148406:AAEfcvXjrEbGuQpgBSy3j0w7j9_LJo2iiAE")
         Bot.bot_updater = Updater(Bot.bot.token)
         Bot.dispatcher = Bot.bot_updater.dispatcher
 
         start_handler = CommandHandler("start", Bot.start)
+        guardar_handler = CommandHandler("guardar", Bot.guardar)
+
         listener_handler = MessageHandler(Filters.text, Bot.listener)
         Bot.dispatcher.add_handler(start_handler)
+        Bot.dispatcher.add_handler(guardar_handler)
         Bot.dispatcher.add_handler(listener_handler)
 
         Bot.bot_updater.start_polling()
@@ -28,6 +32,16 @@ class Bot:
     def start(bot, update, pass_chat_data=True):
         Bot.id = update.message.chat_id
         Bot.enviarMensaje(Comandos.print())
+
+    @staticmethod
+    def guardar(bot, update, pass_chat_data=True):
+        Bot.id = update.message.chat_id
+        Bot.save = not Bot.save
+        if(Bot.save):
+            mensaje = "Se guardarán los videos en el PC!"
+        else:
+            mensaje = "No se guardarán los videos. Se enviarán"
+        Bot.enviarMensaje(mensaje)
 
     @staticmethod
     def listener(bot, update):
@@ -104,10 +118,11 @@ class Bot:
         Bot.enviarMensaje("Se esta descargando el video. Sea paciente por favor...")
         archivo = Youtube.getMp3(url)+".mp3"
 
-        Bot.enviarMensaje("Video descargado! se esta enviando el mp3...")
-
-        Bot.bot.send_chat_action(chat_id=Bot.id, action=telegram.ChatAction.UPLOAD_AUDIO)
-        Bot.bot.send_audio(chat_id=Bot.id, audio=open(archivo, 'rb'))
-
-        if not persistencia:
+        if not Bot.save:
+            Bot.enviarMensaje("Video descargado! [" + archivo + "] Se está enviando el mp3...")
+            Bot.bot.send_chat_action(chat_id=Bot.id, action=telegram.ChatAction.UPLOAD_AUDIO)
+            Bot.bot.send_audio(chat_id=Bot.id, audio=open(archivo, 'rb'))
             remove(archivo)
+        else:
+            Bot.enviarMensaje("Video descargado! [" + archivo + "]")
+

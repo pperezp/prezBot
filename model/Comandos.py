@@ -73,6 +73,7 @@ class Comandos:
     def print():
         str = "Lista de comandos disponibles\n\n"
         str += "/start - Muestra esta lista de comandos\n"
+        str += "/guardar - Switch sobre guardar el video o no en el PC\n"
         for c in Comandos.lista:
             print(c)
             str += c.nombre + " - "+ c.descripcion + "\n"
